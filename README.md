@@ -1,6 +1,6 @@
 # FoodFinder
 
-FoodFinder is a Spring Boot backend that compares grocery prices across different retailers, for now live data can be pulled from Aldi. 
+FoodFinder is a Spring Boot backend that compares grocery prices across different retailers, for now live data can be pulled from Aldi (for now). 
 
 It's a personal learning project built to practice core Spring Boot / Spring Data JPA concepts: REST API design, entity relationships, DTO/entity separation, and integrating with an external third-party API (Algolia, which powers Aldi's product search).
 
