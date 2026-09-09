@@ -15,6 +15,8 @@ import foodfinder.dto.RawProduct;
 @Component
 public class AldiFetcher implements RetailFetcher{
 	
+	public static final String SEARCH_TERM = "eier";
+	
 	private final RestClient restClient = RestClient.builder()
 			.baseUrl("https://R971XDJHE1-dsn.algolia.net")
 			.defaultHeader("x-algolia-api-key", "094afedaf99de404c0d1a62a9cf992b6")
@@ -22,14 +24,18 @@ public class AldiFetcher implements RetailFetcher{
 			.build();
 
 	@Override
-	public List<RawProduct> fetchProducts() {
+	public List<RawProduct> fetchProducts(String searchTerm) {
+		
+		
+		String term = searchTerm.toLowerCase();
 		
 		
 		Map<String, Object> requestBody = Map.of(
 				"requests", List.of(
 						Map.of(
 								"indexName", "an_prd_de_de_products2",
-								"params", "query=eier&hitsPerPage=1000"
+								"query", term,
+								"hitsPerPage", 1000
 								)
 						)
 				);
@@ -43,14 +49,19 @@ public class AldiFetcher implements RetailFetcher{
 		List<RawProduct> rawProducts = new ArrayList<>();
 		for (AlgoliaResult result : response.results()) {
 			for(AlgoliaHit hit : result.hits()) {
+				boolean matchesName = hit.name().toLowerCase().contains(term);
+				boolean matchesBrand = hit.brandName() != null && hit.brandName().toLowerCase().contains(term);
+				
+				if(matchesName || matchesBrand) {
 				rawProducts.add(new RawProduct(
 					hit.name(),
 					hit.currentPrice().priceValue(),
 					"Aldi",
 					hit.brandName(),
 					hit.salesUnit(),
-					hit.objectId()
+					hit.objectID()
 					));
+				}
 			}
 		}
 		return rawProducts;

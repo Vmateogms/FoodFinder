@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import foodfinder.dto.RawProduct;
@@ -21,9 +22,9 @@ public class ImportController {
 	ProductImportServiceImpl piService;
 	
 	@PostMapping("/import/aldi")
-	public ResponseEntity<String> importFromAldi(){
+	public ResponseEntity<String> importFromAldi(@RequestParam String query){
 		
-		List<RawProduct> rawProducts = aldiFetcher.fetchProducts();
+		List<RawProduct> rawProducts = aldiFetcher.fetchProducts(query);
 		piService.importProducts(rawProducts);
 		return ResponseEntity.ok("Success");
 	}

@@ -58,15 +58,20 @@ public class ProductImportServiceImpl {
 				retailer = rRepo.save(retailer);
 				
 			}
+
+			Optional<PriceRecord> existingPriceRecord = prRepo.findByProductAndRetailer(product, retailer);
 			
 			PriceRecord newPriceRecord;
+			if(existingPriceRecord.isPresent()) {
+			newPriceRecord = existingPriceRecord.get();
+			}else {	
 			newPriceRecord = new PriceRecord();
 			newPriceRecord.setProduct(product);
 			newPriceRecord.setRetailer(retailer);
+			}
 			newPriceRecord.setAmount(rawProduct.price());
 			newPriceRecord.setLastRecord(LocalDate.now());
 			prRepo.save(newPriceRecord);
-			
 		}
 		
 	}
